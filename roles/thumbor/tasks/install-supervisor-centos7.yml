@@ -1,0 +1,12 @@
+---
+- name: install supervisor (CentOS 7)
+  yum: name=supervisor enablerepo=epel
+  tags:
+    - supervisor
+    - thumbor
+
+- name: enable and start supervisord (CentOS 7)
+  service: name=supervisord enabled=yes state=started
+  tags:
+    - supervisor
+    - thumbor

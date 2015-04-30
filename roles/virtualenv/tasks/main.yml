@@ -1,0 +1,4 @@
+---
+- name: install virtualenv
+  yum: name=python-virtualenv
+  tags: virtualenv

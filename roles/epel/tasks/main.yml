@@ -1,0 +1,14 @@
+---
+- name: install epel repository (CentOS 6)
+  yum: name=http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/{{ ansible_architecture }}/epel-release-6-8.noarch.rpm
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '6'
+  tags: epel
+
+- name: install epel repository (CentOS 7)
+  yum: name=http://ftp.iij.ad.jp/pub/linux/fedora/epel/7/{{ ansible_architecture }}/e/epel-release-7-5.noarch.rpm
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+  tags: epel
+
+- name: disable epel repository
+  command: sed -i -e 's/enabled=1/enabled=0/' /etc/yum.repos.d/epel.repo
+  tags: epel

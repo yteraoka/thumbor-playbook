@@ -1,0 +1,44 @@
+---
+- name: install thumbor
+  pip: name=thumbor
+       virtualenv={{ thumbor_dir }}
+  tags: thumbor
+
+- name: install GraphisMagck Engine
+  pip: name=graphicsmagick-engine
+       virtualenv={{ thumbor_dir }}
+  when: engine == 'pgmagick'
+  tags: thumbor
+
+- name: install Raven
+  pip: name=raven
+       virtualenv={{ thumbor_dir }}
+  when: thumbor_sentry_dsn_url is defined
+  tags: thumbor
+
+- name: configure thumbor
+  template: src=thumbor.conf.j2 dest=/etc/thumbor.conf
+            owner=root group=root mode=0644
+  notify: restart supervisord
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/storage
+  file: path=/var/lib/thumbor/storage state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/result_storage
+  file: path=/var/lib/thumbor/result_storage state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/tmp
+  file: path=/var/lib/thumbor/tmp state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: copy thumbor.ini
+  template: src=thumbor.ini.j2 dest=/etc/supervisord.d/thumbor.ini
+            owner=root group=root mode=0644
+  tags: thumbor
+  notify: restart supervisord

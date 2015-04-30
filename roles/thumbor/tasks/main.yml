@@ -1,0 +1,7 @@
+- include: yum.yml
+- include: install-supervisor-centos6.yml
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '6'
+- include: install-supervisor-centos7.yml
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+- include: user.yml
+- include: thumbor.yml

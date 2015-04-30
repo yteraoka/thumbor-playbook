@@ -1,0 +1,42 @@
+- name: install required packages
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - python-virtualenv
+    - curl-devel
+    - gcc
+    - gcc-c++
+    - gifsicle
+    - libtiff-devel
+    - jasper-devel
+    - libpng-devel
+    - libjpeg-turbo-devel
+  tags:
+    - yum
+    - thumbor
+
+- name: installl package (remi)
+  yum: name={{ item }} enablerepo=remi
+  with_items:
+    - libwebp-devel
+
+- name: install packages for PIL
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - lcms2-devel
+    - freetype-devel
+    - zlib-devel
+    - openjpeg-devel
+  when: engine == 'pil'
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for GraphicsMagick
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - GraphicsMagick-c++-devel
+    - boost-devel
+  when: engine == 'pgmagick'
+  tags:
+    - yum
+    - thumbor

@@ -1,0 +1,55 @@
+user  nginx;
+worker_processes  {{ ansible_processor_vcpus}};
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+worker_rlimit_nofile  4096;
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format ltsv "host:$remote_addr"
+                    "\ttime:$time_iso8601"
+                    "\tmethod:$request_method"
+                    "\turi:$request_uri"
+                    "\tprotocol:$server_protocol"
+                    "\tstatus:$status"
+                    "\tref:$http_referer"
+                    "\tua:$http_user_agent"
+                    "\tsize:$body_bytes_sent"
+                    "\tvhost:$host"
+                    "\tuser:$remote_user"
+                    "\treqtime:$request_time"
+                    "\trequest_length:$request_length"
+                    "\tupstream_restime:$upstream_response_time"
+                    "\tcache_status:$upstream_cache_status";
+
+    access_log  /var/log/nginx/access.log  ltsv;
+
+    upstream thumbor {
+{% for i in range(0,thumbor_numprocs) %}
+        server  127.0.0.1:800{{ i }};
+{% endfor %}
+    }
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    proxy_ignore_headers  Set-Cookie;
+    proxy_ignore_headers  Cache-Control;
+    proxy_temp_path   /var/cache/nginx/proxy_temp 1 2;
+    proxy_cache_path  /var/cache/nginx/cache keys_zone=CACHE:10m levels=1:2 inactive=6h max_size={{ nginx_cache_max_size | default('500m') }} use_temp_path=on;
+
+    include /etc/nginx/conf.d/*.conf;
+}

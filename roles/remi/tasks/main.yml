@@ -1,0 +1,13 @@
+---
+- name: download remi repository rpm
+  get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
+           dest=/var/tmp/remi-release-{{ ansible_distribution_major_version }}.rpm
+  tags: remi
+
+- name: install remi repository
+  yum: name=/var/tmp/remi-release-{{ ansible_distribution_major_version }}.rpm
+  tags: remi
+
+- name: disable remi repository
+  command: sed -i -e 's/enableed=1/enabled=0/' /etc/yum.repos.d/remi.repo
+  tags: remi

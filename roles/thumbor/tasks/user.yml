@@ -1,0 +1,12 @@
+---
+- name: create thumbor group
+  group: name={{ thumbor_group }}
+  tags:
+    - user
+    - thumbor
+
+- name: create thumbor user
+  user: name={{ thumbor_user }} group={{ thumbor_group }} home=/var/lib/thumbor
+  tags:
+    - user
+    - thumbor

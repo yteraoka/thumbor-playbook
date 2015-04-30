@@ -1,0 +1,15 @@
+- hosts: all
+  vars:
+    thumbor_user: thumbor
+    thumbor_group: thumbor
+    thumbor_dir: /opt/thumbor
+    thumbor_numprocs: 2
+    thumbor_quality: 100
+    thumbor_secure_key: tDQMJ8h7CE4CNTbd6bBNbf8bBaYJ24Cj
+    #thumbor_allow_unsafe_url: "False"
+    #thumbor_sentry_dsn_url: http://...
+  roles:
+    - epel
+    - remi
+    - thumbor
+    - nginx
