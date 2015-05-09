@@ -1,11 +1,9 @@
-- name: install required packages
-  yum: name={{ item }} enablerepo=epel
+- name: install required packages (CentOS)
+  yum: name={{ item }}
   with_items:
-    - python-virtualenv
     - curl-devel
     - gcc
     - gcc-c++
-    - gifsicle
     - libtiff-devel
     - jasper-devel
     - libpng-devel
@@ -14,18 +12,31 @@
     - yum
     - thumbor
 
-- name: installl package (remi)
-  yum: name={{ item }} enablerepo=remi
-  with_items:
-    - libwebp-devel
-
-- name: install packages for PIL
+- name: install required packages (EPEL)
   yum: name={{ item }} enablerepo=epel
   with_items:
-    - lcms2-devel
+    - python-virtualenv
+    - gifsicle
+    - libwebp-devel
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for PIL (CentOS)
+  yum: name={{ item }}
+  with_items:
     - freetype-devel
     - zlib-devel
     - openjpeg-devel
+  when: engine == 'pil'
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for PIL (EPEL)
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - lcms2-devel
   when: engine == 'pil'
   tags:
     - yum
