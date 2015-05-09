@@ -4,6 +4,10 @@
         owner=root group=root mode=0644
   tags: nginx
 
+- name: install nginx
+  yum: name=nginx
+  tags: nginx
+
 - name: mkdir /var/cache/nginx/cache
   file: path=/var/cache/nginx/cache state=directory
         owner=nginx group=nginx mode=0755
@@ -20,7 +24,3 @@
             owner=root group=root mode=0644
   tags: nginx
   notify: reload nginx
-
-- name: install nginx
-  yum: name=nginx
-  tags: nginx
