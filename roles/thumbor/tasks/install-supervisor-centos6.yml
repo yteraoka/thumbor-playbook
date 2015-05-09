@@ -29,6 +29,13 @@
     - supervisor
     - thumbor
 
+- name: create log directory
+  file: path=/var/log/supervisor state=directory
+        owner=root group=root mode=0755
+  tags:
+    - supervisor
+    - thumbor
+
 - name: enable and start supervisord (CentOS 6)
   service: name=supervisord enabled=yes state=started
   tags:
