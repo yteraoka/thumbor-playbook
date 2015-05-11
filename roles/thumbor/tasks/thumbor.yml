@@ -4,7 +4,27 @@
        virtualenv={{ thumbor_dir }}
   tags: thumbor
 
-- name: install GraphisMagck Engine
+- name: check swap required
+  set_fact:
+    swapfile: /swapfile
+  when: engine == 'pgmagick' and ansible_memtotal_mb < 1500 and ansible_swaptotal_mb == 0
+  tags: thumbor
+
+- include: swapon.yml
+  when: swapfile is defined
+  tags: thumbor
+
+- name: install pgmagick
+  pip: name=pgmagick
+       virtualenv={{ thumbor_dir }}
+  when: engine == 'pgmagick'
+  tags: thumbor
+
+- include: swapoff.yml
+  when: swapfile is defined
+  tags: thumbor
+
+- name: install graphicsmagick-engine
   pip: name=graphicsmagick-engine
        virtualenv={{ thumbor_dir }}
   when: engine == 'pgmagick'

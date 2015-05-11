@@ -1,3 +1,4 @@
+---
 - name: install required packages (CentOS)
   yum: name={{ item }}
   with_items:

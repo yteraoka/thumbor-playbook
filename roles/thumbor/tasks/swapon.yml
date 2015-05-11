@@ -1,0 +1,12 @@
+---
+- name: create swap file
+  command: dd if=/dev/zero of={{ swapfile }} bs=100M count=5
+  tags: thumbor
+
+- name: mkswap
+  command: mkswap {{ swapfile }}
+  tags: thumbor
+
+- name: swapon
+  command: swapon {{ swapfile }}
+  tags: thumbor
