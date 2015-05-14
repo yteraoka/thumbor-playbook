@@ -9,6 +9,7 @@
     #thumbor_allow_unsafe_url: "False"
     #thumbor_sentry_dsn_url: http://...
   roles:
+    - check-memory-size
     - epel
     - thumbor
     - nginx
