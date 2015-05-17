@@ -6,10 +6,18 @@
     thumbor_numprocs: 2
     thumbor_quality: 100
     thumbor_secure_key: tDQMJ8h7CE4CNTbd6bBNbf8bBaYJ24Cj
+    thumbor_version: 5.0.0
+    #thumbor_version: 4.10.3
+    #thumbor_version: 4.9.1
+    #thumbor_version: 4.8.6
     #thumbor_allow_unsafe_url: "False"
     #thumbor_sentry_dsn_url: http://...
   roles:
     - check-memory-size
     - epel
+    - envfact
+    - role: python27
+      when: ansible_os_family == 'RedHat'
+            and ansible_distribution_major_version == '6'
     - thumbor
     - nginx

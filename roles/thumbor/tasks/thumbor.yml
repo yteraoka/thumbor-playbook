@@ -1,13 +1,18 @@
 ---
 - name: install thumbor
   pip: name=thumbor
+       version={{ thumbor_version }}
        virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
   tags: thumbor
 
 - name: check swap required
   set_fact:
     swapfile: /swapfile
-  when: engine == 'pgmagick' and ansible_memtotal_mb < 1500 and ansible_swaptotal_mb == 0
+  when: engine == 'pgmagick'
+        and ansible_memtotal_mb < 1500
+        and ansible_swaptotal_mb == 0
   tags: thumbor
 
 - include: swapon.yml
@@ -17,6 +22,8 @@
 - name: install pgmagick
   pip: name=pgmagick
        virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
   when: engine == 'pgmagick'
   tags: thumbor
 
@@ -27,12 +34,16 @@
 - name: install graphicsmagick-engine
   pip: name=graphicsmagick-engine
        virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
   when: engine == 'pgmagick'
   tags: thumbor
 
 - name: install Raven
   pip: name=raven
        virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
   when: thumbor_sentry_dsn_url is defined
   tags: thumbor
 

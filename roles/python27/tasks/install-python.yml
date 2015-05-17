@@ -1,0 +1,33 @@
+# vim:ft=ansible:
+---
+- name: required packages fot build python
+  yum: name={{ item }}
+  with_items:
+    - git
+    - patch
+    - gcc
+    - db4-devel
+    - sqlite-devel
+    - ncurses-devel
+    - readline-devel
+    - bzip2-devel
+    - zlib-devel
+    - openssl-devel
+  tags:
+    - python
+
+- name: clone xbuild
+  git: repo=https://github.com/tagomoris/xbuild.git
+       dest=/var/tmp/xbuild
+  tags:
+    - python
+
+- name: install python 2.7
+  command: ./python-install {{ python27_version }} /opt/python-2.7 chdir=/var/tmp/xbuild
+  tags:
+    - python
+
+- name: cleanup xbuild
+  file: path=/var/tmp/xbuild state=absent
+  tags:
+    - python

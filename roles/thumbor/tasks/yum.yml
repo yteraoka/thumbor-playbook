@@ -16,7 +16,6 @@
 - name: install required packages (EPEL)
   yum: name={{ item }} enablerepo=epel
   with_items:
-    - python-virtualenv
     - gifsicle
     - libwebp-devel
   tags:

@@ -1,0 +1,31 @@
+---
+- name: install virtualenv (CentOS/RHEL 6)
+  pip: name=virtualenv
+       executable={{ pip_executable }}
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - virtualenv
+    - thumbor
+
+#- name: set virtualenv_command (CentOS/RHEL 6)
+#  set_fact:
+#    virtualenv_command: /opt/python-2.7/bin/virtualenv
+#  when: ansible_distribution_major_version == '6'
+#  tags:
+#    - virtualenv
+#    - thumbor
+
+- name: install virtualenv (CentOS/RHEL 7)
+  yum: name=python-virtualenv
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - virtualenv
+    - thumbor
+
+#- name: set virtualenv_command (CentOS/RHEL 7)
+#  set_fact:
+#    virtualenv_command: /usr/bin/virtualenv
+#  when: ansible_distribution_major_version == '7'
+#  tags:
+#    - virtualenv
+#    - thumbor

@@ -1,0 +1,20 @@
+---
+- name: set pip path
+  set_fact:
+    pip_executable: /usr/bin/pip
+    virtualenv_command: /usr/bin/virtualenv
+  tags:
+    - thumbor
+    - virtualenv
+    - supervisor
+
+- name: set pip path for CentOS/RHEL 6
+  set_fact:
+    pip_executable: /opt/python-2.7/bin/pip
+    virtualenv_command: /opt/python-2.7/bin/virtualenv
+  when: ansible_os_family == 'RedHat'
+        and ansible_distribution_major_version == '6'
+  tags:
+    - thumbor
+    - virtualenv
+    - supervisor

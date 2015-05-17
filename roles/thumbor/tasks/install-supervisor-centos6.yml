@@ -1,7 +1,9 @@
 ---
 - name: install supervisor (CentOS 6)
   pip: name=supervisor
+       executable=/opt/supervisor/bin/pip
        virtualenv=/opt/supervisor
+       virtualenv_command={{ virtualenv_command }}
   tags:
     - supervisor
     - thumbor

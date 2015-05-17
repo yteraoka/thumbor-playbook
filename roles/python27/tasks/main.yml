@@ -1,0 +1,6 @@
+# vim:ft=ansible:
+---
+- include: check-installed.yml
+
+- include: install-python.yml
+  when: python27_install_required
