@@ -144,6 +144,8 @@ STORAGE = 'thumbor.storages.file_storage'
 ENGINE = 'thumbor.engines.pil'
 {% elif engine == 'pgmagick' %}
 ENGINE = 'graphicsmagick_engine'
+{% elif engine == 'opencv' %}
+ENGINE = 'opencv_engine'
 {% endif %}
 
 ## The gif engine thumbor should use to perform image operations. This must be
@@ -230,8 +232,8 @@ FILE_LOADER_ROOT_PATH = '{{ thumbor_file_loader_root_path | default("/tmp") }}'
 #HTTP_LOADER_FORWARD_USER_AGENT = False
 
 ## Default user agent for thumbor http loader requests
-## Defaults to: Thumbor/4.12.2
-#HTTP_LOADER_DEFAULT_USER_AGENT = 'Thumbor/4.12.2'
+## Defaults to: Thumbor/5.0.0
+#HTTP_LOADER_DEFAULT_USER_AGENT = 'Thumbor/5.0.0'
 
 ## The proxy host needed to load images through
 ## Defaults to: None
@@ -283,7 +285,7 @@ FILE_LOADER_ROOT_PATH = '{{ thumbor_file_loader_root_path | default("/tmp") }}'
 
 ## The root path where the File Storage will try to find images
 ## Defaults to: /tmp/thumbor/storage
-FILE_STORAGE_ROOT_PATH = '{{ thumbor_storage_root_path | default("/var/lib//thumbor/storage") }}'
+FILE_STORAGE_ROOT_PATH = '{{ thumbor_storage_root_path | default("/var/lib/thumbor/storage") }}'
 
 ################################################################################
 
@@ -418,6 +420,9 @@ UPLOAD_ENABLED = {{ thumbor_upload_enabled | default("False") }}
 ## Defaults to: []
 #DETECTORS = #    [
 #    ]
+{% if engine == 'opencv' %}
+DETECTORS = ["thumbor.detectors.face_detector", "thumbor.detectors.feature_detector"]
+{% endif %}
 
 
 ## The cascade file that opencv will use to detect faces

@@ -1,10 +1,17 @@
 ---
+- name: enable virtualenv_site_packages
+  set_fact:
+    virtualenv_site_packages: "yes"
+  when: engine == 'opencv'
+  tags: thumbor
+
 - name: install thumbor
   pip: name=thumbor
        version={{ thumbor_version }}
        virtualenv={{ thumbor_dir }}
        executable={{ thumbor_dir }}/bin/pip
        virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
   tags: thumbor
 
 - name: check swap required
@@ -24,6 +31,7 @@
        virtualenv={{ thumbor_dir }}
        executable={{ thumbor_dir }}/bin/pip
        virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
   when: engine == 'pgmagick'
   tags: thumbor
 
@@ -36,7 +44,22 @@
        virtualenv={{ thumbor_dir }}
        executable={{ thumbor_dir }}/bin/pip
        virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
   when: engine == 'pgmagick'
+  tags: thumbor
+
+- name: install opencv-python
+  yum: name=opencv-python
+  when: engine == 'opencv'
+  tags: thumbor
+
+- name: install opencv-engine
+  pip: name=opencv-engine
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  when: engine == 'opencv'
   tags: thumbor
 
 - name: install Raven
@@ -44,6 +67,7 @@
        virtualenv={{ thumbor_dir }}
        executable={{ thumbor_dir }}/bin/pip
        virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
   when: thumbor_sentry_dsn_url is defined
   tags: thumbor
 
