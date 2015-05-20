@@ -1,6 +1,6 @@
 # vim:ft=ansible:
 ---
-- name: required packages fot build python
+- name: install required packages for build python
   yum: name={{ item }}
   with_items:
     - git
