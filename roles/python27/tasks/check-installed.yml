@@ -1,0 +1,35 @@
+---
+- name: init check python 2.7
+  set_fact:
+    python27_install_required: false
+  tags:
+    - python
+
+- name: check python 2.7 installed
+  stat: path=/opt/python-2.7/bin/python
+  register: python27_bin
+  tags:
+    - python
+
+- name: python 2.7 is not installed
+  set_fact:
+    python27_install_required: true
+  when: not python27_bin.stat.exists
+  tags:
+    - python
+
+- name: get installed python 2.7 version
+  command: /opt/python-2.7/bin/python -V
+  register: installed_python27_version
+  changed_when: false
+  when: python27_bin.stat.exists
+  tags:
+    - python
+
+- name: check installed python 2.7 version
+  set_fact:
+    python27_install_required: true
+  when: python27_bin.stat.exists
+        and installed_python27_version.stderr != "Python {{ python27_version }}"
+  tags:
+    - python

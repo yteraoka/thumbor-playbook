@@ -1,0 +1,3 @@
+---
+install_dir: /opt/thumbor
+virtualenv_site_packages: no

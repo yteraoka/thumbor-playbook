@@ -1,0 +1,4 @@
+- name: check memory size
+  debug: msg="this host has too low memory to compiling pgmagick"
+  failed_when: true
+  when: engine == 'pgmagick' and ansible_memtotal_mb < 900

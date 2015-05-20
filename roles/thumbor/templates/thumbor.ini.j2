@@ -1,0 +1,16 @@
+[program:thumbor]
+command={{ thumbor_dir }}/bin/thumbor --port=800%(process_num)s --conf=/etc/thumbor.conf
+process_name=thumbor800%(process_num)s
+numprocs={{ thumbor_numprocs }}
+user={{ thumbor_user }}
+directory=/tmp
+autostart=true
+autorestart=true
+startretries=3
+stopsignal=TERM
+stdout_logfile=/var/log/supervisor/thumbor800%(process_num)s.stdout.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=10
+stderr_logfile=/var/log/supervisor/thumbor800%(process_num)s.stderr.log
+stderr_logfile_maxbytes=10MB
+stderr_logfile_backups=10

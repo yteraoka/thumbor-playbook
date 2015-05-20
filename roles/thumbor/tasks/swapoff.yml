@@ -1,0 +1,8 @@
+---
+- name: swapoff
+  command: swapoff {{ swapfile }}
+  tags: thumbor
+
+- name: remove swapfile
+  file: path={{ swapfile }} state=absent
+  tags: thumbor

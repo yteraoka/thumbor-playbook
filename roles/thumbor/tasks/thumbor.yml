@@ -1,0 +1,99 @@
+---
+- name: enable virtualenv_site_packages
+  set_fact:
+    virtualenv_site_packages: "yes"
+  when: engine == 'opencv'
+  tags: thumbor
+
+- name: install thumbor
+  pip: name=thumbor
+       version={{ thumbor_version }}
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  tags: thumbor
+
+- name: check swap required
+  set_fact:
+    swapfile: /swapfile
+  when: engine == 'pgmagick'
+        and ansible_memtotal_mb < 1500
+        and ansible_swaptotal_mb == 0
+  tags: thumbor
+
+- include: swapon.yml
+  when: swapfile is defined
+  tags: thumbor
+
+- name: install pgmagick
+  pip: name=pgmagick
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  when: engine == 'pgmagick'
+  tags: thumbor
+
+- include: swapoff.yml
+  when: swapfile is defined
+  tags: thumbor
+
+- name: install graphicsmagick-engine
+  pip: name=graphicsmagick-engine
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  when: engine == 'pgmagick'
+  tags: thumbor
+
+- name: install opencv-python
+  yum: name=opencv-python
+  when: engine == 'opencv'
+  tags: thumbor
+
+- name: install opencv-engine
+  pip: name=opencv-engine
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  when: engine == 'opencv'
+  tags: thumbor
+
+- name: install Raven
+  pip: name=raven
+       virtualenv={{ thumbor_dir }}
+       executable={{ thumbor_dir }}/bin/pip
+       virtualenv_command={{ virtualenv_command }}
+       virtualenv_site_packages={{ virtualenv_site_packages }}
+  when: thumbor_sentry_dsn_url is defined
+  tags: thumbor
+
+- name: configure thumbor
+  template: src=thumbor.conf.j2 dest=/etc/thumbor.conf
+            owner=root group=root mode=0644
+  notify: restart supervisord
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/storage
+  file: path=/var/lib/thumbor/storage state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/result_storage
+  file: path=/var/lib/thumbor/result_storage state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: mkdir /var/lib/thumbor/tmp
+  file: path=/var/lib/thumbor/tmp state=directory
+        owner={{ thumbor_user }} group={{ thumbor_group }} mode=0755
+  tags: thumbor
+
+- name: copy thumbor.ini
+  template: src=thumbor.ini.j2 dest=/etc/supervisord.d/thumbor.ini
+            owner=root group=root mode=0644
+  tags: thumbor
+  notify: restart supervisord

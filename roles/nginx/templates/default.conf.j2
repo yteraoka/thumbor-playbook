@@ -1,0 +1,22 @@
+server {
+    listen 80;
+    server_name _;
+
+    proxy_cache CACHE;
+
+    location / {
+        proxy_pass http://thumbor;
+        expires {{ nginx_expires | default('48h') }};
+        proxy_cache_min_uses 1;
+        proxy_cache_valid 200 {{ nginx_cache_valid_200 | default('1d') }}
+        proxy_cache_valid any {{ nginx_cache_valid_any | default('5m') }}
+        proxy_connect_timeout 5s;
+    }
+
+    location /server-status {
+        stub_status;
+        access_log  off;
+        allow 127.0.0.0/8;
+        deny  all;
+    }
+}

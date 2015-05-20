@@ -1,0 +1,45 @@
+---
+- name: install supervisor (CentOS 6)
+  pip: name=supervisor
+       executable=/opt/supervisor/bin/pip
+       virtualenv=/opt/supervisor
+       virtualenv_command={{ virtualenv_command }}
+  tags:
+    - supervisor
+    - thumbor
+
+- name: copy supervisord.conf (CentOS 6)
+  copy: src=supervisord.conf dest=/etc/supervisord.conf
+        owner=root group=root mode=0644
+  notify: restart supervisord
+  tags:
+    - supervisor
+    - thumbor
+
+- name: mkdir /etc/supervisord.d (CentOS 6)
+  file: path=/etc/supervisord.d state=directory
+        owner=root group=root mode=0755
+  tags:
+    - supervisor
+    - thumbor
+
+- name: copy /etc/init.d/supervisord (CentOS 6)
+  copy: src=supervisord.init dest=/etc/init.d/supervisord
+        owner=root group=root mode=0755
+  notify: restart supervisord
+  tags:
+    - supervisor
+    - thumbor
+
+- name: create log directory
+  file: path=/var/log/supervisor state=directory
+        owner=root group=root mode=0755
+  tags:
+    - supervisor
+    - thumbor
+
+- name: enable and start supervisord (CentOS 6)
+  service: name=supervisord enabled=yes state=started
+  tags:
+    - supervisor
+    - thumbor

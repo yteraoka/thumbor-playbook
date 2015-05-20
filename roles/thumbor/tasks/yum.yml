@@ -1,0 +1,53 @@
+---
+- name: install required packages (CentOS)
+  yum: name={{ item }}
+  with_items:
+    - curl-devel
+    - gcc
+    - gcc-c++
+    - libtiff-devel
+    - jasper-devel
+    - libpng-devel
+    - libjpeg-turbo-devel
+  tags:
+    - yum
+    - thumbor
+
+- name: install required packages (EPEL)
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - gifsicle
+    - libwebp-devel
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for PIL (CentOS)
+  yum: name={{ item }}
+  with_items:
+    - freetype-devel
+    - zlib-devel
+    - openjpeg-devel
+  when: engine == 'pil'
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for PIL (EPEL)
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - lcms2-devel
+  when: engine == 'pil'
+  tags:
+    - yum
+    - thumbor
+
+- name: install packages for GraphicsMagick
+  yum: name={{ item }} enablerepo=epel
+  with_items:
+    - GraphicsMagick-c++-devel
+    - boost-devel
+  when: engine == 'pgmagick'
+  tags:
+    - yum
+    - thumbor
