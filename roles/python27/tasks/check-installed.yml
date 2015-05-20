@@ -33,7 +33,3 @@
         and installed_python27_version.stderr != "Python {{ python27_version }}"
   tags:
     - python
-
-- debug: msg="python27_install_required = {{ python27_install_required }}"
-  tags:
-    - python
